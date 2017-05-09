@@ -3,7 +3,6 @@ package com.android.udacity.dinesh.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -33,10 +32,6 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
     public Context context;
 
-    private static final String SORTBY_OPTION_KEY = "sortby_option_key";
-    private int selectedSortByOptionID = -1;
-    MenuItem menuItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,23 +56,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
         movieDataQueryTask = new MovieDataQueryTask();
 
-        if(savedInstanceState != null) {
-            selectedSortByOptionID = savedInstanceState.getInt(SORTBY_OPTION_KEY);
-        }
-
-        switch (selectedSortByOptionID) {
-            case R.id.sort_by_popularMovies :
-                movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
-                break;
-
-            case R.id.sort_by_rating :
-                movieDataQueryTask.execute(getString(R.string.SORT_BY_RATING));
-                break;
-
-            default:
-                movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
-                break;
-        }
+        movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
 
     }
     private void showMovieDataView() {
@@ -147,53 +126,27 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sort_movies, menu);
-
-        switch (selectedSortByOptionID) {
-            case R.id.sort_by_popularMovies :
-                menuItem = (MenuItem) menu.findItem(R.id.sort_by_popularMovies);
-                menuItem.setChecked(true);
-                break;
-
-            case R.id.sort_by_rating :
-                menuItem = (MenuItem) menu.findItem(R.id.sort_by_rating);
-                menuItem.setChecked(true);
-                break;
-
-            default:
-                menuItem = (MenuItem) menu.findItem(R.id.sort_by_popularMovies);
-                menuItem.setChecked(true);
-                break;
-        }
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        //MenuPopupWindow.MenuDropDownListView menuDropDownListView = new MenuPopupWindow.MenuDropDownListView(this, true);
-        //menuDropDownListView.getCheckedItemIds();
+        MenuPopupWindow.MenuDropDownListView menuDropDownListView = new MenuPopupWindow.MenuDropDownListView(this, true);
+        menuDropDownListView.getCheckedItemIds();
 
         switch (item.getItemId()) {
             case R.id.sort_by_popularMovies:
                 movieDataQueryTask = new MovieDataQueryTask();
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
                 item.setChecked(true);
-                selectedSortByOptionID = item.getItemId();
                 return true;
             case R.id.sort_by_rating:
                 movieDataQueryTask = new MovieDataQueryTask();
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_RATING));
                 item.setChecked(true);
-                selectedSortByOptionID = item.getItemId();
                 return true;
         }
         return false;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(SORTBY_OPTION_KEY, selectedSortByOptionID);
     }
 }
