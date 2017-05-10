@@ -17,7 +17,6 @@ import java.util.Scanner;
 public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    // TODO (1) Remove the API KEY. Should not hard code.
     public static URL buildUrl(String query, Context context) {
         Uri buildUri = Uri.parse(context.getResources().getString(R.string.THE_MOVIE_DATABASE_API))
                 .buildUpon()

@@ -2,13 +2,16 @@ package com.android.udacity.dinesh.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.MenuPopupWindow;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +23,7 @@ import com.android.udacity.dinesh.popularmovies.utilities.NetworkUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MovieDBAdapter.MovieDBAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements MovieDBAdapter.MovieDBAdapterOnClickHandler, SharedPreferences.OnSharedPreferenceChangeListener{
 
     private RecyclerView mRecyclerView;
     private MovieDBAdapter mMovieDBAdapter;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
     private int selectedSortByOptionID = -1;
     MenuItem menuItem;
 
+    private static final String PREFERENCES_SORTBY_OPTION_KEY = "preferences_sortby_option_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,25 +65,56 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
         movieDataQueryTask = new MovieDataQueryTask();
 
-        if(savedInstanceState != null) {
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //preferences.edit().putInt(PREFERENCES_SORTBY_OPTION_KEY, selectedItemIndex).commit();
+
+        setupSharedPreferences();
+
+        /*if(savedInstanceState != null) {
             selectedSortByOptionID = savedInstanceState.getInt(SORTBY_OPTION_KEY);
+        } else {
+            selectedSortByOptionID = R.id.sort_by_popularMovies;
         }
 
         switch (selectedSortByOptionID) {
             case R.id.sort_by_popularMovies :
+                //preferences.edit().putInt(PREFERENCES_SORTBY_OPTION_KEY, R.id.sort_by_popularMovies).commit();
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
                 break;
 
             case R.id.sort_by_rating :
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_RATING));
                 break;
-
+*//*
             default:
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
-                break;
-        }
+                break;*//*
+        }*/
 
     }
+
+    private void setupSharedPreferences(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        loadDataFromSortByPreferences(sharedPreferences);
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getString(R.string.pref_sortby_key))) {
+            loadDataFromSortByPreferences(sharedPreferences);
+        }
+    }
+
+    public void loadDataFromSortByPreferences(SharedPreferences sharedPreferences) {
+        String sortByOption = sharedPreferences.getString(getString(R.string.pref_sortby_key), getString(R.string.pref_sortby_popular_value));
+        Log.d(MainActivity.class.getSimpleName(), "SortBy option from preference : " + sortByOption);
+        //movieDataQueryTask.execute(sortByOption);
+        movieDataQueryTask = new MovieDataQueryTask();
+        movieDataQueryTask.execute(sortByOption);
+    }
+
     private void showMovieDataView() {
         /* First, make sure the error is invisible */
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
@@ -105,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
         startActivity(movieDetailsIntent);
     }
 
+
+
     public class MovieDataQueryTask extends AsyncTask <String, Void, ArrayList<MovieDetails>> {
         @Override
         protected void onPreExecute() {
@@ -118,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
             String querySortString = query[0];
             URL theMovieDBRequestURL = NetworkUtils.buildUrl(querySortString, context);
             String movieResults = null;
+            Log.i(MainActivity.class.getSimpleName(), "querySortString : " + querySortString);
+            Log.i(MainActivity.class.getSimpleName(), "theMovieDBRequestURL : " + theMovieDBRequestURL);
             try {
                 movieResults = NetworkUtils.getResponseFromHttpUrl(theMovieDBRequestURL);
 
@@ -145,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        /*MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sort_movies, menu);
 
         switch (selectedSortByOptionID) {
@@ -165,6 +204,10 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
                 break;
         }
 
+        return true;*/
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings, menu);
         return true;
     }
 
@@ -187,6 +230,10 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
                 item.setChecked(true);
                 selectedSortByOptionID = item.getItemId();
                 return true;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
         }
         return false;
     }
@@ -195,5 +242,13 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SORTBY_OPTION_KEY, selectedSortByOptionID);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }
