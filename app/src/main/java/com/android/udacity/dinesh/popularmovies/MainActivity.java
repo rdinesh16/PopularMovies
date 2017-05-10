@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
     public Context context;
 
-    private static final String SORTBY_OPTION_KEY = "sortby_option_key";
-    private int selectedSortByOptionID = -1;
-    MenuItem menuItem;
+//    private static final String SORTBY_OPTION_KEY = "sortby_option_key";
+//    private int selectedSortByOptionID = -1;
+//    MenuItem menuItem;
 
-    private static final String PREFERENCES_SORTBY_OPTION_KEY = "preferences_sortby_option_key";
+//    private static final String PREFERENCES_SORTBY_OPTION_KEY = "preferences_sortby_option_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
 
     public void loadDataFromSortByPreferences(SharedPreferences sharedPreferences) {
         String sortByOption = sharedPreferences.getString(getString(R.string.pref_sortby_key), getString(R.string.pref_sortby_popular_value));
-        Log.d(MainActivity.class.getSimpleName(), "SortBy option from preference : " + sortByOption);
         //movieDataQueryTask.execute(sortByOption);
         movieDataQueryTask = new MovieDataQueryTask();
         movieDataQueryTask.execute(sortByOption);
@@ -155,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
             String querySortString = query[0];
             URL theMovieDBRequestURL = NetworkUtils.buildUrl(querySortString, context);
             String movieResults = null;
-            Log.i(MainActivity.class.getSimpleName(), "querySortString : " + querySortString);
-            Log.i(MainActivity.class.getSimpleName(), "theMovieDBRequestURL : " + theMovieDBRequestURL);
             try {
                 movieResults = NetworkUtils.getResponseFromHttpUrl(theMovieDBRequestURL);
 
@@ -218,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
         //menuDropDownListView.getCheckedItemIds();
 
         switch (item.getItemId()) {
-            case R.id.sort_by_popularMovies:
+            /*case R.id.sort_by_popularMovies:
                 movieDataQueryTask = new MovieDataQueryTask();
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_POPULAR));
                 item.setChecked(true);
@@ -229,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
                 movieDataQueryTask.execute(getString(R.string.SORT_BY_RATING));
                 item.setChecked(true);
                 selectedSortByOptionID = item.getItemId();
-                return true;
+                return true;*/
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
@@ -238,11 +235,12 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
         return false;
     }
 
+    /*
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SORTBY_OPTION_KEY, selectedSortByOptionID);
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
