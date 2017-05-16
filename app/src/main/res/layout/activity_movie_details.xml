@@ -152,5 +152,19 @@
         android:maxLines="40"
         android:ellipsize="none"/>
 
+    <TextView
+        android:id="@+id/movie_trailer_label"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/TRAILERS"
+        />
+
+    <TextView
+        android:id="@+id/movie_trailer_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Link to movie trailers"
+        />
+
 </LinearLayout>
 </ScrollView>

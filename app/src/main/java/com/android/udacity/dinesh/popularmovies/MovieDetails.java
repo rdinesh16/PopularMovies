@@ -1,6 +1,7 @@
 package com.android.udacity.dinesh.popularmovies;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by dines_000 on 1/27/2017.
@@ -15,8 +16,9 @@ public class MovieDetails implements Serializable{
     private Double voteAverage;
     private Double popularity;
     private String backdropPath;
+    private ArrayList<String> trailersList;
 
-    public MovieDetails(int ID, String originalTitle, String posterPath, String overview, String releaseDate, Double voteAverage, Double popularity, String backdropPath) {
+    public MovieDetails(int ID, String originalTitle, String posterPath, String overview, String releaseDate, Double voteAverage, Double popularity, String backdropPath, ArrayList<String> trailersList) {
         this.id = ID;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
@@ -25,37 +27,40 @@ public class MovieDetails implements Serializable{
         this.voteAverage = voteAverage;
         this.popularity = popularity;
         this.backdropPath = backdropPath;
+        this.trailersList = trailersList;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getOriginalTitle() {
+    String getOriginalTitle() {
         return originalTitle;
     }
 
-    public String getPosterPath() {
+    String getPosterPath() {
         return posterPath;
     }
 
-    public String getOverview() {
+    String getOverview() {
         return overview;
     }
 
-    public String getReleaseDate() {
+    String getReleaseDate() {
         return releaseDate;
     }
 
-    public Double getVoteAverage() {
+    Double getVoteAverage() {
         return voteAverage;
     }
 
-    public Double getPopularity() {
+    Double getPopularity() {
         return popularity;
     }
 
     public String getBackdropPath() {
         return backdropPath;
     }
+
+    public ArrayList<String> getTrailersList() { return trailersList; }
 }

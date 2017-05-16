@@ -20,12 +20,18 @@
     <string name="JSON_POPULARITY">popularity</string>
     <string name="JSON_BACKDROP_PATH">backdrop_path</string>
 
+    <!-- String Constants for extractiong TrailerList in MoviesDBJsonUtils.java -->
+    <string name="JSON_FIELD_TYPE">type</string>
+    <string name="JSON_FIELD_TRAILER">Trailer</string>
+    <string name="JSON_FIELD_KEY">key</string>
+
 
     <!-- String Constants for NetworkUtils.java -->
     <string name="THE_MOVIE_DATABASE_API">http://api.themoviedb.org/3/</string>
     <string name="MOVIE">movie</string>
     <string name="BASE_IMAGE_URL">http://image.tmdb.org/t/p/</string>
     <string name="IMAGE_SIZE_DEFAULT">w185</string>
+    <string name="VIDEOS">videos</string>
 
     <!-- String Constants for NetworkUtils.java : API_DETAILS-->
     <string name="API_KEY_PARAM">api_key</string>
@@ -37,6 +43,7 @@
     <string name="USER_RATING">USER RATING</string>
     <string name="POPULARITY">POPULARITY RATING</string>
     <string name="SYNOPSIS">SYNOPSIS</string>
+    <string name="TRAILERS">TRAILERS</string>
 
     <!-- String Constants for Menu - settings -->
     <string name="menu_settings">Settings</string>

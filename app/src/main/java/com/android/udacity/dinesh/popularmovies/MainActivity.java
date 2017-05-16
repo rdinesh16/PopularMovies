@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.MenuPopupWindow;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MovieDBAdapter.Mo
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         showMovieDataView();
 
-        movieDataQueryTask = new MovieDataQueryTask();
+        //movieDataQueryTask = new MovieDataQueryTask();
 
         //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //preferences.edit().putInt(PREFERENCES_SORTBY_OPTION_KEY, selectedItemIndex).commit();
