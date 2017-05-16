@@ -1,5 +1,6 @@
 package com.android.udacity.dinesh.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
@@ -8,9 +9,12 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.udacity.dinesh.popularmovies.data.FavoriteMoviesContract.FavoriteMoviesEntry;
 import com.android.udacity.dinesh.popularmovies.utilities.MoviesDBJsonUtils;
 import com.android.udacity.dinesh.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -29,6 +33,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private TextView trailersListTextView;
 
+    MovieDetails movieDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +51,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         Intent receivedIntent = getIntent();
 
         if(receivedIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            MovieDetails movieDetails = (MovieDetails) receivedIntent.getSerializableExtra(Intent.EXTRA_TEXT);
+            movieDetails = (MovieDetails) receivedIntent.getSerializableExtra(Intent.EXTRA_TEXT);
             if(movieDetails != null){
                 Uri backDropImageUri = NetworkUtils.buildImageUrl(movieDetails.getPosterPath(), MovieDetailsActivity.this);
                 Picasso.with(this).load(backDropImageUri).into(backdropImageView);
@@ -133,5 +139,27 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         } else {
             loaderManager.restartLoader(MOVIE_TRAILER_LIST_LOADER, trailerListQueryBundle, this);
         }
+    }
+
+    public void onClickFavorites(View view) {
+        if(movieDetails == null) {
+            return;
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteMoviesEntry.COLUMN_MOVIE_ID, movieDetails.getId());
+        contentValues.put(FavoriteMoviesEntry.COLUMN_ORIGINAL_TITLE, movieDetails.getOriginalTitle());
+        contentValues.put(FavoriteMoviesEntry.COLUMN_VOTE_AVERAGE, movieDetails.getVoteAverage());
+        contentValues.put(FavoriteMoviesEntry.COLUMN_POPULARITY, movieDetails.getPopularity());
+        contentValues.put(FavoriteMoviesEntry.COLUMN_RELEASE_DATE, movieDetails.getReleaseDate());
+        contentValues.put(FavoriteMoviesEntry.COLUMN_OVERVIEW, movieDetails.getOverview());
+
+        Uri uri = getContentResolver().insert(FavoriteMoviesEntry.CONTENT_URI, contentValues);
+
+        if(uri != null){
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        finish();
     }
 }

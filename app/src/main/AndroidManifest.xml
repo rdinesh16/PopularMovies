@@ -26,6 +26,12 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".SettingsActivity"></activity>
+        
+        <provider
+            android:authorities="com.android.udacity.dinesh.popularmovies"
+            android:name="com.android.udacity.dinesh.popularmovies.data.FavoritesContentProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

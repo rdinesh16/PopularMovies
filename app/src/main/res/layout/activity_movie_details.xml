@@ -147,7 +147,7 @@
         android:paddingRight="8dp"
         android:paddingStart="8dp"
         android:id="@+id/movie_synopsis"
-        android:gravity="fill_horizontal|right"
+        android:gravity="fill_horizontal|end"
         android:scrollHorizontally="false"
         android:maxLines="40"
         android:ellipsize="none"/>
@@ -164,6 +164,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Link to movie trailers"
+        />
+
+    <Button
+        android:id="@+id/favoriteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Add to Favorites"
+        android:onClick="onClickFavorites"
         />
 
 </LinearLayout>
